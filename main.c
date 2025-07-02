@@ -50,8 +50,8 @@ uint32_t dst[HEIGHT_DST * WIDTH_SRC] = {
 };
 
 #define PIXEL_SIZE (sizeof(uint32_t))
-#define SURFACE_THEORETICAL_MAX_SIZE (UINT32_MAX / PIXEL_SIZE)
-#define SURFACE_THEORETICAL_MAX_COORDINATE (SURFACE_THEORETICAL_MAX_SIZE - 1)
+#define CANVAS_THEORETICAL_MAX_SIZE (UINT32_MAX / PIXEL_SIZE)
+#define CANVAS_THEORETICAL_MAX_COORDINATE (CANVAS_THEORETICAL_MAX_SIZE - 1)
 
 #define NO_OP      UINT32_C(0x00)
 #define FLIP_V     UINT32_C(0x04)
@@ -203,10 +203,10 @@ const uint32_t dst_tl_y = 6;
 const uint32_t dst_tl_x = 6;
 const uint32_t dst_br_y = 7;
 const uint32_t dst_br_x = 7;
-const uint32_t min_surf_tl_y = 0;
-const uint32_t min_surf_tl_x = 0;
-const uint32_t max_surf_br_y = SURFACE_THEORETICAL_MAX_COORDINATE;
-const uint32_t max_surf_br_x = SURFACE_THEORETICAL_MAX_COORDINATE;
+const uint32_t min_canv_tl_y = 0;
+const uint32_t min_canv_tl_x = 0;
+const uint32_t max_canv_br_y = CANVAS_THEORETICAL_MAX_COORDINATE;
+const uint32_t max_canv_br_x = CANVAS_THEORETICAL_MAX_COORDINATE;
 
 //////////////////////////////////////////////////////////
 
@@ -396,16 +396,16 @@ static int all_operations(uint32_t *dst,
 
     if (dst_height <= 0
      || dst_width <= 0
-     || dst_height > (int32_t)SURFACE_THEORETICAL_MAX_SIZE
-     || dst_width > (int32_t)SURFACE_THEORETICAL_MAX_SIZE) {
+     || dst_height > (int32_t)CANVAS_THEORETICAL_MAX_SIZE
+     || dst_width > (int32_t)CANVAS_THEORETICAL_MAX_SIZE) {
         printf("ERROR: bad coordinates\n");
         return -1;
     }
 
     if (src_height <= 0
      || src_width <= 0
-     || src_height > (int32_t)SURFACE_THEORETICAL_MAX_SIZE
-     || src_width > (int32_t)SURFACE_THEORETICAL_MAX_SIZE) {
+     || src_height > (int32_t)CANVAS_THEORETICAL_MAX_SIZE
+     || src_width > (int32_t)CANVAS_THEORETICAL_MAX_SIZE) {
         printf("ERROR: bad coordinates\n");
         return -2;
     }
@@ -481,8 +481,8 @@ static void print_header(void)
 {
     printf("\n");
 
-    printf("Surf: TLy = %2u, TLx = %2u, BRy = %2u, BRx = %2u\n",
-           min_surf_tl_y, min_surf_tl_x, max_surf_br_y, max_surf_br_x);
+    printf("Canv: TLy = %2u, TLx = %2u, BRy = %2u, BRx = %2u\n",
+           min_canv_tl_y, min_canv_tl_x, max_canv_br_y, max_canv_br_x);
     printf("Src:  TLy = %2u, TLx = %2u, BRy = %2u, BRx = %2u\n",
            src_tl_y, src_tl_x, src_br_y, src_br_x);
     printf("Src:  Full Height = %2u, Width = %2u\n", HEIGHT_SRC, WIDTH_SRC);
@@ -541,7 +541,7 @@ static void print_header(void)
     return;
 }
 
-static void print_surf(const uint32_t *arr,
+static void print_canv(const uint32_t *arr,
                        uint32_t start_y,
                        uint32_t start_x,
                        uint32_t height,
@@ -563,7 +563,7 @@ static void print_surf(const uint32_t *arr,
         return;
     }
 
-    printf("Surf: %s\n", str);
+    printf("canv: %s\n", str);
 
     printf("\n");
     printf("             ");
@@ -641,9 +641,9 @@ int main()
     printf("\n");
     printf("--------------------------------------------------------------------\n");
     printf("Resulted Operations:\n");
-    print_surf(src, 0, 0, HEIGHT_SRC, WIDTH_SRC, HEIGHT_SRC, WIDTH_SRC, "SRC");
-    print_surf(dst, 0, 0, HEIGHT_DST, WIDTH_DST, HEIGHT_SRC, WIDTH_SRC, "DST");
-    print_surf(src,
+    print_canv(src, 0, 0, HEIGHT_SRC, WIDTH_SRC, HEIGHT_SRC, WIDTH_SRC, "SRC");
+    print_canv(dst, 0, 0, HEIGHT_DST, WIDTH_DST, HEIGHT_SRC, WIDTH_SRC, "DST");
+    print_canv(src,
                src_tl_y,
                src_tl_x,
                src_br_y - src_tl_y + 1,
@@ -651,7 +651,7 @@ int main()
                HEIGHT_SRC,
                WIDTH_SRC,
                "SRC (data only)");
-    print_surf(dst,
+    print_canv(dst,
                dst_tl_y,
                dst_tl_x,
                dst_br_y - dst_tl_y + 1,
